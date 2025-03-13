@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody), typeof(MeshRenderer))]
 public class Cube : MonoBehaviour
 {
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;
 
-    private bool TouchedPlatform = false;
+    private bool _isPlatformTouched = false;
 
-    private GetRandom _getRandom = new();
+    private UserUtilites _userUtilities = new();
     private Renderer _renderer;
     private Rigidbody _rigidbody;
 
@@ -23,7 +24,7 @@ public class Cube : MonoBehaviour
 
     private void OnEnable()
     {
-        TouchedPlatform = false;
+        _isPlatformTouched = false;
         _renderer.material.color = Color.white;
         _rigidbody.angularVelocity = Vector3.zero;
         _rigidbody.velocity = Vector3.zero;
@@ -31,17 +32,17 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent(out Platform platform) && TouchedPlatform == false)
+        if (_isPlatformTouched == false && collision.gameObject.TryGetComponent(out Platform platform))
         {
-            TouchedPlatform = true;
+            _isPlatformTouched = true;
             StartCoroutine(ReleaseAfterDelay());
         }
     }
 
     private IEnumerator ReleaseAfterDelay()
     {
-        _getRandom.Color(gameObject.GetComponent<Renderer>());
-        yield return new WaitForSeconds(_getRandom.Range(_minDelay, _maxDelay));
+        _userUtilities.Color(_renderer);
+        yield return new WaitForSeconds(_userUtilities.Range(_minDelay, _maxDelay));
         TimerEnded?.Invoke(this);
     }
 }

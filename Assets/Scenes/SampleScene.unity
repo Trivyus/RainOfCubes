@@ -487,7 +487,6 @@ GameObject:
   m_Component:
   - component: {fileID: 556882056}
   - component: {fileID: 556882055}
-  - component: {fileID: 556882057}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Untagged
@@ -507,9 +506,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cdc6515ad029924eb4a4265b79bc419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pool: {fileID: 556882057}
-  _groundPlane: {fileID: 37777308}
+  _cube: {fileID: 5042622005379245028, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
+  _ground: {fileID: 37777314}
   _repeatRate: 1
+  _poolCapacity: 5
+  _poolMaxSize: 10
+  _spawnHeight: 7
 --- !u!4 &556882056
 Transform:
   m_ObjectHideFlags: 0
@@ -525,21 +527,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &556882057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 556882054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a16d0a4885d92d749b450d8a906b92b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cube: {fileID: 5042622005379245028, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
-  _poolCapacity: 5
-  _poolMaxSize: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
