@@ -11,7 +11,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int _poolMaxSize = 10;
     [SerializeField] private int _spawnHeight = 7;
 
-    private UserUtilites _userUtilities = new UserUtilites();
     private ObjectPool<Cube> _poolCubes;
 
     private void Awake()
@@ -21,7 +20,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnCube());
+        StartCoroutine(SpawnCubes());
     }
 
     private void InstantiatePool()
@@ -36,14 +35,14 @@ public class Spawner : MonoBehaviour
             maxSize: _poolMaxSize);
     }
 
-    private IEnumerator SpawnCube()
+    private IEnumerator SpawnCubes()
     {
         WaitForSeconds wait = new WaitForSeconds(_repeatRate);
 
         while (enabled)
         {
             Cube cube = _poolCubes.Get();
-            cube.transform.position = _userUtilities.Position(_ground.GetComponent<MeshRenderer>(), _spawnHeight);
+            cube.transform.position = GetSpawnPosition();
             cube.TimerEnded += ReturnCube;
             yield return wait;
         }
@@ -63,5 +62,12 @@ public class Spawner : MonoBehaviour
     {
         cube.TimerEnded -= ReturnCube;
         _poolCubes.Release(cube);
+    }
+
+    private Vector3 GetSpawnPosition()
+    {
+        Bounds bounds = _ground.GetPlatformRenderer().bounds;
+
+        return new Vector3 { x = Random.Range(bounds.min.x, bounds.max.x), y = _spawnHeight, z = Random.Range(bounds.min.z, bounds.max.z) };
     }
 }

@@ -10,7 +10,6 @@ public class Cube : MonoBehaviour
 
     private bool _isPlatformTouched = false;
 
-    private UserUtilites _userUtilities = new();
     private Renderer _renderer;
     private Rigidbody _rigidbody;
 
@@ -41,8 +40,14 @@ public class Cube : MonoBehaviour
 
     private IEnumerator ReleaseAfterDelay()
     {
-        _userUtilities.Color(_renderer);
-        yield return new WaitForSeconds(_userUtilities.Range(_minDelay, _maxDelay));
+        GetRandomColor(_renderer);
+        yield return new WaitForSeconds(GetRandomDelay(_minDelay, _maxDelay));
         TimerEnded?.Invoke(this);
     }
+
+    private void GetRandomColor(Renderer renderer) => 
+        renderer.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+
+    private int GetRandomDelay(int min, int max) => 
+        UnityEngine.Random.Range(min, max + 1);
 }
