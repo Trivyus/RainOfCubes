@@ -12,6 +12,7 @@ public class Bomb : SpawnableObject
     private Renderer _renderer;
     private MaterialPropertyBlock _propBlock;
     private Rigidbody _rigidbody;
+
     private float _initialAlpha;
 
     private void Awake()

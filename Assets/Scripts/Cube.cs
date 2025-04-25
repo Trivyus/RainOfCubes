@@ -8,10 +8,10 @@ public class Cube : SpawnableObject
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;
 
-    private bool _isPlatformTouched = false;
-
     private Renderer _renderer;
     private Rigidbody _rigidbody;
+
+    private bool _isPlatformTouched = false;
 
     private void Awake()
     {

@@ -2,98 +2,76 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class UniversalSpawner : MonoBehaviour
+public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObject
 {
-    [SerializeField] private GameObject _cubePrefab;
-    [SerializeField] private GameObject _bombPrefab;
-    [SerializeField] private Platform _ground;
-    [SerializeField] private float _repeatRate = 1.0f;
-    [SerializeField] private int _poolCapacity = 5;
-    [SerializeField] private int _poolMaxSize = 10;
-    [SerializeField] private int _spawnHeight = 7;
+    [SerializeField] protected SpawnableObject Prefab;
+    [SerializeField] protected Platform Ground;
+    [SerializeField] protected float RepeatRate = 1.0f;
+    [SerializeField] protected int PoolCapacity = 5;
+    [SerializeField] protected int PoolMaxSize = 10;
+    [SerializeField] protected int SpawnHeight = 7;
 
-    private ObjectPool<Cube> _cubePool;
-    private ObjectPool<Bomb> _bombPool;
+    protected ObjectPool<T> Pool;
+    private Coroutine _spawnCoroutine;
 
-    private void Awake()
+    public int TotalSpawned { get; private set; }
+    public int TotalCreated { get; private set; }
+    public int ActiveCount => Pool.CountActive;
+
+    protected virtual void Awake()
     {
-        _cubePool = CreatePool<Cube>(_cubePrefab);
-        _bombPool = CreatePool<Bomb>(_bombPrefab);
-    }
-
-    private ObjectPool<T> CreatePool<T>(GameObject prefab) where T : SpawnableObject
-    {
-        return new ObjectPool<T>(
-            createFunc: () => 
+        Pool = new ObjectPool<T>(
+            createFunc: () =>
             {
-                var obj = Instantiate(prefab).GetComponent<T>();
+                var obj = Instantiate(Prefab).GetComponent<T>();
                 obj.TimerEnded += OnTimerEnded;
+                TotalCreated++;
                 return obj;
             },
-            actionOnGet: (obj) => obj.gameObject.SetActive(true),
+            actionOnGet: (obj) =>
+            {
+                obj.gameObject.SetActive(true);
+                obj.transform.position = GetSpawnPosition();
+                TotalSpawned++;
+            },
             actionOnRelease: (obj) => obj.gameObject.SetActive(false),
             actionOnDestroy: (obj) => Destroy(obj.gameObject),
             collectionCheck: true,
-            defaultCapacity: _poolCapacity,
-            maxSize: _poolMaxSize);
+            defaultCapacity: PoolCapacity,
+            maxSize: PoolMaxSize);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-        StartCoroutine(SpawnCubes());
+        if (typeof(T) == typeof(Cube))
+            _spawnCoroutine = StartCoroutine(SpawnObjects());
     }
 
-    private IEnumerator SpawnCubes()
+    private void OnDisable()
     {
-        WaitForSeconds wait = new WaitForSeconds(_repeatRate);
+        if (_spawnCoroutine != null)
+            StopCoroutine(_spawnCoroutine);
+    }
+
+    protected virtual IEnumerator SpawnObjects()
+    {
+        WaitForSeconds wait = new(RepeatRate);
 
         while (enabled)
         {
-            SpawnCube();
+            Pool.Get();
             yield return wait;
         }
     }
 
-    private void SpawnCube()
+    protected abstract void OnTimerEnded(SpawnableObject obj);
+
+    protected Vector3 GetSpawnPosition()
     {
-        Cube cube = _cubePool.Get();
-        cube.transform.position = GetSpawnPosition();
-    }
-
-    private void OnTimerEnded(SpawnableObject obj)
-    {
-        switch (obj)
-        {
-            case Cube cube:
-                if (cube.gameObject.activeSelf)
-                {
-                    SpawnBombAt(cube.transform.position);
-                    _cubePool.Release(cube);
-                }
-                break;
-
-            case Bomb bomb:
-                if (bomb.gameObject.activeSelf)
-                {
-                    _bombPool.Release(bomb);
-                }
-                break;
-        }
-    }
-
-    private void SpawnBombAt(Vector3 position)
-    {
-        Bomb bomb = _bombPool.Get();
-        bomb.transform.position = position;
-    }
-
-
-    private Vector3 GetSpawnPosition()
-    {
-        Bounds bounds = _ground.GetPlatformRenderer().bounds;
+        Bounds bounds = Ground.GetPlatformRenderer().bounds;
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
-            _spawnHeight,
+            SpawnHeight,
             Random.Range(bounds.min.z, bounds.max.z)
         );
     }
