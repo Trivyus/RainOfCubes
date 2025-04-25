@@ -135,6 +135,11 @@ GameObject:
   - component: {fileID: 37777311}
   - component: {fileID: 37777310}
   - component: {fileID: 37777314}
+  - component: {fileID: 37777318}
+  - component: {fileID: 37777317}
+  - component: {fileID: 37777316}
+  - component: {fileID: 37777315}
+  - component: {fileID: 37777319}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Platform
@@ -241,6 +246,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac95f5b5cec2b9b4eba50a139782e08f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &37777315
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37777308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 15, z: 0}
+  m_Center: {x: 0, y: 7, z: 5}
+--- !u!65 &37777316
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37777308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0, y: 15, z: 10}
+  m_Center: {x: 5, y: 7, z: 0}
+--- !u!65 &37777317
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37777308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 15, z: 0}
+  m_Center: {x: 0, y: 7, z: -5}
+--- !u!65 &37777318
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37777308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0, y: 15, z: 10}
+  m_Center: {x: -5, y: 7, z: 0}
+--- !u!65 &37777319
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37777308}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 0, z: 10}
+  m_Center: {x: 0, y: 14, z: 0}
 --- !u!1 &80729226
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,15 +596,30 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 556882056}
-  - component: {fileID: 556882055}
+  - component: {fileID: 556882057}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: Spawners
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &556882055
+--- !u!4 &556882056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556882054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &556882057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -506,27 +631,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cdc6515ad029924eb4a4265b79bc419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cube: {fileID: 5042622005379245028, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
+  _cubePrefab: {fileID: 3500752175879694252, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
+  _bombPrefab: {fileID: 285883477050375608, guid: 5afcea173f7426648971dcfe9ebe2949, type: 3}
   _ground: {fileID: 37777314}
   _repeatRate: 1
   _poolCapacity: 5
   _poolMaxSize: 10
   _spawnHeight: 7
---- !u!4 &556882056
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 556882054}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1549757, y: 2.124895, z: -0.541414}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

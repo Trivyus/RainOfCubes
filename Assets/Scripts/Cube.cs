@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(MeshRenderer))]
-public class Cube : MonoBehaviour
+public class Cube : SpawnableObject
 {
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;
@@ -12,8 +12,6 @@ public class Cube : MonoBehaviour
 
     private Renderer _renderer;
     private Rigidbody _rigidbody;
-
-    public event Action<Cube> TimerEnded;
 
     private void Awake()
     {
@@ -31,7 +29,7 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_isPlatformTouched == false && collision.gameObject.TryGetComponent(out Platform platform))
+        if (_isPlatformTouched == false && collision.gameObject.TryGetComponent<Platform>(out _))
         {
             _isPlatformTouched = true;
             StartCoroutine(ReleaseAfterDelay());
@@ -42,7 +40,7 @@ public class Cube : MonoBehaviour
     {
         GetRandomColor(_renderer);
         yield return new WaitForSeconds(GetRandomDelay(_minDelay, _maxDelay));
-        TimerEnded?.Invoke(this);
+        NotifyTimerEnded();
     }
 
     private void GetRandomColor(Renderer renderer) => 
