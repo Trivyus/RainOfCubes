@@ -3,13 +3,14 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(MeshRenderer))]
-public class Cube : SpawnableObject
+public class Cube : SpawnableObject<Cube>
 {
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;
 
     private Renderer _renderer;
     private Rigidbody _rigidbody;
+    private Coroutine _releaseCoroutine;
 
     private bool _isPlatformTouched = false;
 
@@ -21,10 +22,16 @@ public class Cube : SpawnableObject
 
     private void OnEnable()
     {
-        _isPlatformTouched = false;
-        _renderer.material.color = Color.white;
-        _rigidbody.angularVelocity = Vector3.zero;
-        _rigidbody.velocity = Vector3.zero;
+        ResetCubeState();
+    }
+
+    private void OnDisable()
+    {
+        if (_releaseCoroutine != null)
+        {
+            StopCoroutine(_releaseCoroutine);
+            _releaseCoroutine = null;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -41,6 +48,17 @@ public class Cube : SpawnableObject
         GetRandomColor(_renderer);
         yield return new WaitForSeconds(GetRandomDelay(_minDelay, _maxDelay));
         NotifyTimerEnded();
+    }
+
+    private void ResetCubeState()
+    {
+        _isPlatformTouched = false;
+        _renderer.material.color = Color.white;
+
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+
+        transform.rotation = Quaternion.identity;
     }
 
     private void GetRandomColor(Renderer renderer) => 

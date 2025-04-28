@@ -4,9 +4,15 @@ public class CubeSpawner : UniversalSpawner<Cube>
 {
     [SerializeField] private BombSpawner _bombSpawner;
 
-    protected override void OnTimerEnded(SpawnableObject obj)
+    protected override void Awake()
     {
-        if (obj is Cube cube && cube.gameObject.activeSelf)
+        base.Awake();
+        StartSpawning();
+    }
+
+    protected override void OnTimerEnded(Cube cube)
+    {
+        if (cube.gameObject.activeSelf)
         {
             _bombSpawner.SpawnAtPosition(cube.transform.position);
             Pool.Release(cube);

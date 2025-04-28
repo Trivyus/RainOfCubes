@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(MeshRenderer))]
-public class Bomb : SpawnableObject
+public class Bomb : SpawnableObject<Bomb>
 {
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;

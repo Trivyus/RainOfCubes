@@ -8,9 +8,9 @@ public class BombSpawner : UniversalSpawner<Bomb>
         bomb.transform.position = position;
     }
 
-    protected override void OnTimerEnded(SpawnableObject obj)
+    protected override void OnTimerEnded(Bomb bomb)
     {
-        if (obj is Bomb bomb && bomb.gameObject.activeSelf)
+        if (bomb.gameObject.activeSelf)
         {
             Pool.Release(bomb);
         }

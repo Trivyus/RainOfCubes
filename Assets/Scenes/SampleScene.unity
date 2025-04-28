@@ -767,12 +767,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dc9add77105c304eb77ce088941d5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 5986741646259508525, guid: 5afcea173f7426648971dcfe9ebe2949, type: 3}
-  Ground: {fileID: 37777314}
-  RepeatRate: 1
-  PoolCapacity: 5
-  PoolMaxSize: 10
-  SpawnHeight: 7
+  _prefab: {fileID: 5986741646259508525, guid: 5afcea173f7426648971dcfe9ebe2949, type: 3}
+  _ground: {fileID: 37777314}
+  _repeatRate: 1
+  _poolCapacity: 5
+  _poolMaxSize: 10
+  _spawnHeight: 7
 --- !u!114 &556882058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,12 +785,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7dc8e4d8c2f20846a2f901b96dfe1c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 5042622005379245028, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
-  Ground: {fileID: 37777314}
-  RepeatRate: 1
-  PoolCapacity: 5
-  PoolMaxSize: 10
-  SpawnHeight: 7
+  _prefab: {fileID: 5042622005379245028, guid: dc849fff70eb12a4c87378fb0440d5a9, type: 3}
+  _ground: {fileID: 37777314}
+  _repeatRate: 1
+  _poolCapacity: 5
+  _poolMaxSize: 10
+  _spawnHeight: 7
   _bombSpawner: {fileID: 556882057}
 --- !u!114 &556882059
 MonoBehaviour:

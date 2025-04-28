@@ -1,50 +1,61 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObject
+public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObject<T>
 {
-    [SerializeField] protected SpawnableObject Prefab;
-    [SerializeField] protected Platform Ground;
-    [SerializeField] protected float RepeatRate = 1.0f;
-    [SerializeField] protected int PoolCapacity = 5;
-    [SerializeField] protected int PoolMaxSize = 10;
-    [SerializeField] protected int SpawnHeight = 7;
+    [SerializeField] private SpawnableObject<T> _prefab;
+    [SerializeField] private Platform _ground;
+    [SerializeField] private float _repeatRate = 1.0f;
+    [SerializeField] private int _poolCapacity = 5;
+    [SerializeField] private int _poolMaxSize = 10;
+    [SerializeField] private int _spawnHeight = 7;
 
-    protected ObjectPool<T> Pool;
     private Coroutine _spawnCoroutine;
+
+    public event Action OnObjectSpawned;
+    public event Action OnObjectReleased;
+    public event Action OnObjectCreated;
 
     public int TotalSpawned { get; private set; }
     public int TotalCreated { get; private set; }
     public int ActiveCount => Pool.CountActive;
 
+    public ObjectPool<T> Pool { get; private set; }
+
     protected virtual void Awake()
     {
         Pool = new ObjectPool<T>(
-            createFunc: () =>
-            {
-                var obj = Instantiate(Prefab).GetComponent<T>();
-                obj.TimerEnded += OnTimerEnded;
-                TotalCreated++;
-                return obj;
-            },
-            actionOnGet: (obj) =>
-            {
-                obj.gameObject.SetActive(true);
-                obj.transform.position = GetSpawnPosition();
-                TotalSpawned++;
-            },
-            actionOnRelease: (obj) => obj.gameObject.SetActive(false),
-            actionOnDestroy: (obj) => Destroy(obj.gameObject),
-            collectionCheck: true,
-            defaultCapacity: PoolCapacity,
-            maxSize: PoolMaxSize);
-    }
-
-    protected virtual void Start()
-    {
-        if (typeof(T) == typeof(Cube))
-            _spawnCoroutine = StartCoroutine(SpawnObjects());
+        createFunc: () =>
+        {
+            var obj = Instantiate(_prefab).GetComponent<T>();
+            obj.TimerEnded += OnTimerEnded;
+            TotalCreated++;
+            OnObjectCreated?.Invoke();
+            return obj;
+        },
+        actionOnGet: (obj) =>
+        {
+            obj.gameObject.SetActive(true);
+            obj.transform.position = GetSpawnPosition();
+            TotalSpawned++;
+            OnObjectSpawned?.Invoke();
+        },
+        actionOnRelease: (obj) =>
+        {
+            obj.TimerEnded -= OnTimerEnded;
+            obj.gameObject.SetActive(false);
+            OnObjectReleased?.Invoke();
+        },
+        actionOnDestroy: (obj) =>
+        {
+            obj.TimerEnded -= OnTimerEnded;
+            Destroy(obj.gameObject);
+        },
+        collectionCheck: true,
+        defaultCapacity: _poolCapacity,
+        maxSize: _poolMaxSize);
     }
 
     private void OnDisable()
@@ -53,9 +64,14 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
             StopCoroutine(_spawnCoroutine);
     }
 
+    public void StartSpawning()
+    {
+        _spawnCoroutine = StartCoroutine(SpawnObjects());
+    }
+
     protected virtual IEnumerator SpawnObjects()
     {
-        WaitForSeconds wait = new(RepeatRate);
+        WaitForSeconds wait = new(_repeatRate);
 
         while (enabled)
         {
@@ -64,15 +80,15 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
         }
     }
 
-    protected abstract void OnTimerEnded(SpawnableObject obj);
+    protected abstract void OnTimerEnded(T obj);
 
     protected Vector3 GetSpawnPosition()
     {
-        Bounds bounds = Ground.GetPlatformRenderer().bounds;
+        Bounds bounds = _ground.GetPlatformRenderer().bounds;
         return new Vector3(
-            Random.Range(bounds.min.x, bounds.max.x),
-            SpawnHeight,
-            Random.Range(bounds.min.z, bounds.max.z)
+            UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+            _spawnHeight,
+            UnityEngine.Random.Range(bounds.min.z, bounds.max.z)
         );
     }
 }
