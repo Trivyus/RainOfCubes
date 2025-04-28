@@ -39,7 +39,7 @@ public class Cube : SpawnableObject<Cube>
         if (_isPlatformTouched == false && collision.gameObject.TryGetComponent<Platform>(out _))
         {
             _isPlatformTouched = true;
-            StartCoroutine(ReleaseAfterDelay());
+            _releaseCoroutine = StartCoroutine(ReleaseAfterDelay());
         }
     }
 
