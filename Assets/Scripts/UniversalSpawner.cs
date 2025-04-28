@@ -14,48 +14,26 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
 
     private Coroutine _spawnCoroutine;
 
-    public event Action OnObjectSpawned;
-    public event Action OnObjectReleased;
-    public event Action OnObjectCreated;
+    public event Action ObjectSpawned;
+    public event Action ObjectReleased;
+    public event Action ObjectCreated;
 
     public int TotalSpawned { get; private set; }
     public int TotalCreated { get; private set; }
-    public int ActiveCount => Pool.CountActive;
+    public int ActiveCount => _pool.CountActive;
 
-    public ObjectPool<T> Pool { get; private set; }
+    private ObjectPool<T> _pool;
 
     protected virtual void Awake()
     {
-        Pool = new ObjectPool<T>(
-        createFunc: () =>
-        {
-            var obj = Instantiate(_prefab).GetComponent<T>();
-            obj.TimerEnded += OnTimerEnded;
-            TotalCreated++;
-            OnObjectCreated?.Invoke();
-            return obj;
-        },
-        actionOnGet: (obj) =>
-        {
-            obj.gameObject.SetActive(true);
-            obj.transform.position = GetSpawnPosition();
-            TotalSpawned++;
-            OnObjectSpawned?.Invoke();
-        },
-        actionOnRelease: (obj) =>
-        {
-            obj.TimerEnded -= OnTimerEnded;
-            obj.gameObject.SetActive(false);
-            OnObjectReleased?.Invoke();
-        },
-        actionOnDestroy: (obj) =>
-        {
-            obj.TimerEnded -= OnTimerEnded;
-            Destroy(obj.gameObject);
-        },
-        collectionCheck: true,
-        defaultCapacity: _poolCapacity,
-        maxSize: _poolMaxSize);
+        _pool = new ObjectPool<T>(
+             createFunc: CreateObject,
+             actionOnGet: ActionOnGetObject,
+             actionOnRelease: ActionOnReleaseObject,
+             actionOnDestroy: ActionOnDestroyObject,
+             collectionCheck: true,
+             defaultCapacity: _poolCapacity,
+             maxSize: _poolMaxSize);
     }
 
     private void OnDisable()
@@ -75,8 +53,21 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
 
         while (enabled)
         {
-            Pool.Get();
+            _pool.Get();
             yield return wait;
+        }
+    }
+
+    protected T GetObjectFromPool()
+    {
+        return _pool.Get();
+    }
+
+    protected void ReleaseObjectToPool(T obj)
+    {
+        if (obj.gameObject.activeSelf)
+        {
+            _pool.Release(obj);
         }
     }
 
@@ -90,5 +81,36 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
             _spawnHeight,
             UnityEngine.Random.Range(bounds.min.z, bounds.max.z)
         );
+    }
+
+    private T CreateObject()
+    {
+        var obj = Instantiate(_prefab).GetComponent<T>();
+        obj.TimerEnded += OnTimerEnded;
+        TotalCreated++;
+        ObjectCreated?.Invoke();
+        return obj;
+    }
+
+    private void ActionOnGetObject(T obj)
+    {
+        obj.gameObject.SetActive(true);
+        obj.Init();
+        obj.transform.position = GetSpawnPosition();
+        TotalSpawned++;
+        ObjectSpawned?.Invoke();
+    }
+
+    private void ActionOnReleaseObject(T obj)
+    {
+        obj.TimerEnded -= OnTimerEnded;
+        obj.gameObject.SetActive(false);
+        ObjectReleased?.Invoke();
+    }
+
+    private void ActionOnDestroyObject(T obj)
+    {
+        obj.TimerEnded -= OnTimerEnded;
+        Destroy(obj.gameObject);
     }
 }

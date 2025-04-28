@@ -4,7 +4,7 @@ public class BombSpawner : UniversalSpawner<Bomb>
 {
     public void SpawnAtPosition(Vector3 position)
     {
-        var bomb = Pool.Get();
+        var bomb = GetObjectFromPool();
         bomb.transform.position = position;
     }
 
@@ -12,7 +12,7 @@ public class BombSpawner : UniversalSpawner<Bomb>
     {
         if (bomb.gameObject.activeSelf)
         {
-            Pool.Release(bomb);
+            ReleaseObjectToPool(bomb);
         }
     }
 }

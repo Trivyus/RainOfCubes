@@ -15,7 +15,7 @@ public class CubeSpawner : UniversalSpawner<Cube>
         if (cube.gameObject.activeSelf)
         {
             _bombSpawner.SpawnAtPosition(cube.transform.position);
-            Pool.Release(cube);
+            ReleaseObjectToPool(cube);
         }
     }
 }

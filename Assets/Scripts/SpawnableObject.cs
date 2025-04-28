@@ -5,6 +5,8 @@ public abstract class SpawnableObject<T> : MonoBehaviour where T : SpawnableObje
 {
     public event Action<T> TimerEnded;
 
+    public virtual void Init(){ }
+
     protected void NotifyTimerEnded()
     {
         TimerEnded?.Invoke((T)this);

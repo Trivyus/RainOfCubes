@@ -733,6 +733,8 @@ GameObject:
   - component: {fileID: 556882058}
   - component: {fileID: 556882057}
   - component: {fileID: 556882059}
+  - component: {fileID: 556882061}
+  - component: {fileID: 556882060}
   m_Layer: 0
   m_Name: Spawners
   m_TagString: Untagged
@@ -804,14 +806,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57db6435062e6ca43894c6b24aa33605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubeSpawner: {fileID: 556882058}
-  _bombSpawner: {fileID: 556882057}
-  _cubeTotalSpawned: {fileID: 1963449005}
-  _cubeTotalCreated: {fileID: 1687126488}
-  _cubeActiveCount: {fileID: 213957032}
-  _bombTotalSpawned: {fileID: 2056417459}
-  _bombTotalCreated: {fileID: 1466490404}
-  _bombActiveCount: {fileID: 1297399400}
+  _cubeSpawnerView: {fileID: 556882060}
+  _bombSpawnerView: {fileID: 556882061}
+--- !u!114 &556882060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556882054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79494393f71705a4cb42ce3d04e4f3af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawner: {fileID: 556882058}
+  _totalSpawnedText: {fileID: 1963449005}
+  _totalCreatedText: {fileID: 1687126488}
+  _activeCountText: {fileID: 213957032}
+--- !u!114 &556882061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556882054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85dd997891284b44fb8a4528cb83f612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawner: {fileID: 556882057}
+  _totalSpawnedText: {fileID: 2056417459}
+  _totalCreatedText: {fileID: 1466490404}
+  _activeCountText: {fileID: 1297399400}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +6,7 @@ public class Cube : SpawnableObject<Cube>
 {
     [SerializeField] private int _minDelay = 2;
     [SerializeField] private int _maxDelay = 5;
+    [SerializeField] private Color _initialColor = Color.white;
 
     private Renderer _renderer;
     private Rigidbody _rigidbody;
@@ -20,9 +20,9 @@ public class Cube : SpawnableObject<Cube>
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
+    public override void Init()
     {
-        ResetCubeState();
+        ResetState();
     }
 
     private void OnDisable()
@@ -50,13 +50,20 @@ public class Cube : SpawnableObject<Cube>
         NotifyTimerEnded();
     }
 
-    private void ResetCubeState()
+    private void ResetState()
     {
+        if (_releaseCoroutine != null)
+        {
+            StopCoroutine(_releaseCoroutine);
+            _releaseCoroutine = null;
+        }
+
         _isPlatformTouched = false;
-        _renderer.material.color = Color.white;
+        _renderer.material.color = _initialColor;
 
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
+        _rigidbody.Sleep();
 
         transform.rotation = Quaternion.identity;
     }
