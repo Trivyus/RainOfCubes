@@ -28,9 +28,9 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
     {
         _pool = new ObjectPool<T>(
              createFunc: CreateObject,
-             actionOnGet: ActionOnGetObject,
-             actionOnRelease: ActionOnReleaseObject,
-             actionOnDestroy: ActionOnDestroyObject,
+             actionOnGet: HandleObjectGetting,
+             actionOnRelease: HandleObjectReleasing,
+             actionOnDestroy: HandleObjectDestruction,
              collectionCheck: true,
              defaultCapacity: _poolCapacity,
              maxSize: _poolMaxSize);
@@ -86,29 +86,29 @@ public abstract class UniversalSpawner<T> : MonoBehaviour where T : SpawnableObj
     private T CreateObject()
     {
         var obj = Instantiate(_prefab).GetComponent<T>();
-        obj.TimerEnded += OnTimerEnded;
         TotalCreated++;
         ObjectCreated?.Invoke();
         return obj;
     }
 
-    private void ActionOnGetObject(T obj)
+    private void HandleObjectGetting(T obj)
     {
         obj.gameObject.SetActive(true);
         obj.Init();
         obj.transform.position = GetSpawnPosition();
+        obj.TimerEnded += OnTimerEnded;
         TotalSpawned++;
         ObjectSpawned?.Invoke();
     }
 
-    private void ActionOnReleaseObject(T obj)
+    private void HandleObjectReleasing(T obj)
     {
         obj.TimerEnded -= OnTimerEnded;
         obj.gameObject.SetActive(false);
         ObjectReleased?.Invoke();
     }
 
-    private void ActionOnDestroyObject(T obj)
+    private void HandleObjectDestruction(T obj)
     {
         obj.TimerEnded -= OnTimerEnded;
         Destroy(obj.gameObject);
